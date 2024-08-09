@@ -16,11 +16,15 @@ def format_csv(val, column_name):
    elif isinstance(val, str) and re.match(pattern, val):
         return val
    else:
-        # Enclose strings in double quotes and replace 'nan' with ''
+      if '.' in val:
+        return f'"{str(val).rstrip('0').rstrip('.')}"'
+      else:
         return f'"{str(val)}"'
 
 def german_to_float(german_str):
    try:
+      if german_str is None:
+         return None
       # Replace comma with period
       return float(german_str.replace('.', '').replace(',', '.'))
    except ValueError:
@@ -35,7 +39,7 @@ file2 = 'hibiscus-export-20240809.csv'
 output_file = '/mnt/c/Users/prv/Downloads/sm_new.txt'
 
 # Define the list of columns to skip formatting
-skip_columns = {'Splittbuchung - Auftraggeber / Name','Splittbuchung - Verwendungszweckzeile 1','Splittbuchung - Kategorie','Splittbuchung - Unterkategorie','Splittbuchung - Kostenstelle','','',''}  # Replace with your actual column names
+skip_columns = {'Splittbuchung - Auftraggeber / Name','Splittbuchung - Verwendungszweckzeile 1','Splittbuchung - Kategorie','Splittbuchung - Unterkategorie','Splittbuchung - Kostenstelle','Splittbuchung - SteuersatzWaehr','Splittbuchung - SteuerbetragWaehr','Splittbuchung - Fibu-Nr.'}  # Replace with your actual column names
 
 # Load CSV files
 df1 = pd.read_csv(file1, delimiter=';', decimal=',')
@@ -50,6 +54,10 @@ df1 = df1.fillna('')
 df1["Steuersatz"] = df1["Steuersatz"].apply(german_to_float)
 df1["Splittbuchung - Originalbetrag"] = df1["Splittbuchung - Originalbetrag"].apply(german_to_float)
 df1["Steuerbetrag"] = df1["Steuerbetrag"].apply(german_to_float)
+df1["Splittbuchung - Steuersatz"] = df1["Splittbuchung - Steuersatz"].apply(german_to_float)
+df1["Splittbuchung - Steuerbetrag"] = df1["Splittbuchung - Steuerbetrag"].apply(german_to_float)
+df1["Primanota"] = df1["Primanota"].astype(str)
+# df1["Steuerbetrag"] = df1["Steuerbetrag"].apply(german_to_float)
 
 # Apply the function to all elements in the DataFrame
 df1_formatted = df1.apply(lambda col: col.apply(lambda val: format_csv(val, col.name)))
