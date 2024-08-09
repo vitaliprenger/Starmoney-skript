@@ -16,7 +16,7 @@ skip_columns = {'Splittbuchung - Auftraggeber / Name','Splittbuchung - Verwendun
 # Custom function to format cells
 def format_csv(val, column_name):
    if val == '"None"' or val is None:
-      val = ''
+      return ''
    if column_name in skip_columns:
         return val  # Skip formatting for specified columns
    if isinstance(val, (int, float)):
