@@ -2,17 +2,6 @@ import pandas as pd
 import csv  # Import Python's standard csv module
 import re
 
-# Define the regex pattern for the format DD.MM.YYYY
-pattern = r'^\d{2}\.\d{2}\.\d{4}$'
-
-# Load the two CSV files
-file1 = '1056547415_EUR_20240809_144952.txt'
-file2 = 'hibiscus-export-20240809.csv'
-output_file = '/mnt/c/Users/prv/Downloads/sm_new.txt'
-
-# Define the list of columns to skip formatting
-skip_columns = {'Splittbuchung - Auftraggeber / Name','Splittbuchung - Verwendungszweckzeile 1','Splittbuchung - Kategorie','Splittbuchung - Unterkategorie','Splittbuchung - Kostenstelle','','',''}  # Replace with your actual column names
-
 # Custom function to format cells
 def format_csv(val, column_name):
    if val == '"None"' or val is None:
@@ -37,6 +26,17 @@ def german_to_float(german_str):
    except ValueError:
       return None  # Handle cases where conversion fails
      
+# Define the regex pattern for the format DD.MM.YYYY
+pattern = r'^\d{2}\.\d{2}\.\d{4}$'
+
+# Load the two CSV files
+file1 = '1056547415_EUR_20240809_144952.txt'
+file2 = 'hibiscus-export-20240809.csv'
+output_file = '/mnt/c/Users/prv/Downloads/sm_new.txt'
+
+# Define the list of columns to skip formatting
+skip_columns = {'Splittbuchung - Auftraggeber / Name','Splittbuchung - Verwendungszweckzeile 1','Splittbuchung - Kategorie','Splittbuchung - Unterkategorie','Splittbuchung - Kostenstelle','','',''}  # Replace with your actual column names
+
 # Load CSV files
 df1 = pd.read_csv(file1, delimiter=';', decimal=',')
 df2 = pd.read_csv(file2, delimiter=';', decimal=',')
